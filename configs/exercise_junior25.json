@@ -1,0 +1,90 @@
+{
+    "field": {
+        "rows": 4,
+        "columns": 6,
+        "disabled": []
+    },
+    "detailsDir": "../configs/details/",
+    "initial": [0, 2, 4, 5, 7, 9, 10, 11],
+    "details": [
+        {
+            "name": "00",
+            "position": [1, 5],
+            "rotation": 4,
+            "isFrontSide": false
+        },
+        {
+            "name": "01",
+            "position": [0, 4],
+            "rotation": 3,
+            "isFrontSide": false
+        },
+        {
+            "name": "02",
+            "position": [2, 1],
+            "rotation": 5,
+            "isFrontSide": false
+        },
+        {
+            "name": "03",
+            "position": [2, 5],
+            "rotation": 3,
+            "isFrontSide": false
+        },
+        {
+
+            "name": "04",
+            "position": [2, 5],
+            "rotation": 1,
+            "isFrontSide": true
+        },
+        {
+
+            "name": "05",
+            "position": [3, 1],
+            "rotation": 5,
+            "isFrontSide": false
+        },
+        {
+
+            "name": "06",
+            "position": [1, 2],
+            "rotation": 0,
+            "isFrontSide": true
+        },
+        {
+            "name": "07",
+            "position": [1, 0],
+            "rotation": 2,
+            "isFrontSide": true
+        },
+        {
+
+            "name": "08",
+            "position": [0, 1],
+            "rotation": 0,
+            "isFrontSide": true
+        },
+        {
+
+            "name": "09",
+            "position": [3, 3],
+            "rotation": 3,
+            "isFrontSide": true
+        },
+        {
+
+            "name": "10",
+            "position": [0, 3],
+            "rotation": 3,
+            "isFrontSide": false
+        },
+        {
+
+            "name": "11",
+            "position": [2, 3],
+            "rotation": 5,
+            "isFrontSide": true
+        }
+    ]
+}

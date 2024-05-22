@@ -1,0 +1,16 @@
+{
+    "form": "straight",
+    "elements":
+    {
+        "left": {
+            "type": "insert"
+        },
+        "center": {
+            "type": "solid"
+        },
+        "right": {
+            "type": "holey",
+            "holes": [2]
+        }
+    }
+}

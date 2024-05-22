@@ -1,0 +1,18 @@
+
+{
+    "form": "obtuse",
+    "elements":
+    {
+        "left": {
+            "type": "holey",
+            "holes": [0]
+        },
+        "center": {
+            "type": "solid"
+        },
+        "right": {
+            "type": "holey",
+            "holes": [1]
+        }
+    }
+}

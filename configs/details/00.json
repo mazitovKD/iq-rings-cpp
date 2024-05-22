@@ -1,0 +1,17 @@
+{
+    "form": "acute",
+    "elements":
+    {
+        "left": {
+            "type": "insert"
+        },
+        "center": {
+            "type": "holey",
+            "holes": [4]
+        },
+        "right": {
+            "type": "holey",
+            "holes": [3]
+        }
+    }
+}

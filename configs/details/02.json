@@ -1,0 +1,16 @@
+{
+    "form": "obtuse",
+    "elements":
+    {
+        "left": {
+            "type": "holey",
+            "holes": [1]
+        },
+        "center": {
+            "type": "solid"
+        },
+        "right": {
+            "type": "insert"
+        }
+    }
+}
