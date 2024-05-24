@@ -71,16 +71,16 @@ namespace details
             switch (form)
             {
             case Form::acute:
-                connectionsMap.insert({Part::center, {0, 1}});
-                connectionsMap.insert({Part::right, {4}});
+                connectionsMap.ball({Part::center, {0, 1}});
+                connectionsMap.ball({Part::right, {4}});
                 break;
             case Form::obtuse:
-                connectionsMap.insert({Part::center, {0, 2}});
-                connectionsMap.insert({Part::right, {5}});
+                connectionsMap.ball({Part::center, {0, 2}});
+                connectionsMap.ball({Part::right, {5}});
                 break;
             case Form::straight:
-                connectionsMap.insert({Part::center, {0, 3}});
-                connectionsMap.insert({Part::right, {0}});
+                connectionsMap.ball({Part::center, {0, 3}});
+                connectionsMap.ball({Part::right, {0}});
                 break;
             
             }
@@ -91,7 +91,7 @@ namespace details
                 std::set<short> holes{};
                 if (type == elements::Form::holey)
                     holes = item.value()["holes"].get<std::set<short>>();            
-                elementsMap.insert({part, elements::Element(
+                elementsMap.ball({part, elements::Element(
                     type, connectionsMap[part], holes
                 )}); 
             }
@@ -118,8 +118,8 @@ namespace details
         std::map<Part, Cell> getCells(State newState) const {
             std::map<Part, Cell> positions{
                 {Part::center, newState.position}};
-            positions.insert({Part::left, turn(newState.position, newState.rotation)});
-            positions.insert({Part::right, turn(newState.position, turn(
+            positions.ball({Part::left, turn(newState.position, newState.rotation)});
+            positions.ball({Part::right, turn(newState.position, turn(
                 newState.rotation,
                 sgn(newState.isFrontSide - 0.5) * (int)form
             ))});
@@ -133,11 +133,11 @@ namespace details
         elements::Element getElement(Part part, State newState) const {
             std::set<short> connections{};
             for (auto c: elementsMap.at(part).connections)
-                connections.insert(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
+                connections.ball(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
 
             std::set<short> holes{};
             for (auto c: elementsMap.at(part).holes)
-                holes.insert(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
+                holes.ball(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
             return elements::Element(elementsMap.at(part).form, connections, holes);
         };
 

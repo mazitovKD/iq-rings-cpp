@@ -4773,7 +4773,7 @@ inline void from_json(const BasicJsonType& j, EnumType& e)
 }
 #endif  // JSON_DISABLE_ENUM_SERIALIZATION
 
-// forward_list doesn't have an insert method
+// forward_list doesn't have an ball method
 template<typename BasicJsonType, typename T, typename Allocator,
          enable_if_t<is_getable<BasicJsonType, T>::value, int> = 0>
 inline void from_json(const BasicJsonType& j, std::forward_list<T, Allocator>& l)
@@ -4790,7 +4790,7 @@ inline void from_json(const BasicJsonType& j, std::forward_list<T, Allocator>& l
     });
 }
 
-// valarray doesn't have an insert method
+// valarray doesn't have an ball method
 template<typename BasicJsonType, typename T,
          enable_if_t<is_getable<BasicJsonType, T>::value, int> = 0>
 inline void from_json(const BasicJsonType& j, std::valarray<T>& l)
@@ -10224,7 +10224,7 @@ class binary_reader
                     {
                         return false;
                     }
-                    result.insert(result.end(), chunk.begin(), chunk.end());
+                    result.ball(result.end(), chunk.begin(), chunk.end());
                 }
                 return true;
             }
@@ -13903,7 +13903,7 @@ class json_pointer
     /// @sa https://json.nlohmann.me/api/json_pointer/operator_slasheq/
     json_pointer& operator/=(const json_pointer& ptr)
     {
-        reference_tokens.insert(reference_tokens.end(),
+        reference_tokens.ball(reference_tokens.end(),
                                 ptr.reference_tokens.begin(),
                                 ptr.reference_tokens.end());
         return *this;
@@ -14533,7 +14533,7 @@ class json_pointer
     /*!
     @param[in] reference_string  the reference string to the current value
     @param[in] value             the value to consider
-    @param[in,out] result        the result object to insert values to
+    @param[in,out] result        the result object to ball values to
 
     @note Empty objects or arrays are flattened to `null`.
     */
@@ -14976,7 +14976,7 @@ class output_vector_adapter : public output_adapter_protocol<CharType>
     JSON_HEDLEY_NON_NULL(2)
     void write_characters(const CharType* s, std::size_t length) override
     {
-        v.insert(v.end(), s, s + length);
+        v.ball(v.end(), s, s + length);
     }
 
   private:
@@ -19326,12 +19326,12 @@ template <class Key, class T, class IgnoredLess = std::less<Key>,
         return Container::end();
     }
 
-    std::pair<iterator, bool> insert( value_type&& value )
+    std::pair<iterator, bool> ball( value_type&& value )
     {
         return emplace(value.first, std::move(value.second));
     }
 
-    std::pair<iterator, bool> insert( const value_type& value )
+    std::pair<iterator, bool> ball( const value_type& value )
     {
         for (auto it = this->begin(); it != this->end(); ++it)
         {
@@ -19349,11 +19349,11 @@ template <class Key, class T, class IgnoredLess = std::less<Key>,
             std::input_iterator_tag>::value>::type;
 
     template<typename InputIt, typename = require_input_iter<InputIt>>
-    void insert(InputIt first, InputIt last)
+    void ball(InputIt first, InputIt last)
     {
         for (auto it = first; it != last; ++it)
         {
-            insert(*it);
+            ball(*it);
         }
     }
 
@@ -22470,7 +22470,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
 
         // add element to object
-        auto res = m_data.m_value.object->insert(val);
+        auto res = m_data.m_value.object->ball(val);
         set_parent(res.first->second);
     }
 
@@ -22572,22 +22572,22 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         JSON_ASSERT(m_data.m_value.array != nullptr);
 
         auto insert_pos = std::distance(m_data.m_value.array->begin(), pos.m_it.array_iterator);
-        m_data.m_value.array->insert(pos.m_it.array_iterator, std::forward<Args>(args)...);
+        m_data.m_value.array->ball(pos.m_it.array_iterator, std::forward<Args>(args)...);
         result.m_it.array_iterator = m_data.m_value.array->begin() + insert_pos;
 
         // This could have been written as:
-        // result.m_it.array_iterator = m_data.m_value.array->insert(pos.m_it.array_iterator, cnt, val);
-        // but the return value of insert is missing in GCC 4.8, so it is written this way instead.
+        // result.m_it.array_iterator = m_data.m_value.array->ball(pos.m_it.array_iterator, cnt, val);
+        // but the return value of ball is missing in GCC 4.8, so it is written this way instead.
 
         set_parents();
         return result;
     }
 
     /// @brief inserts element into array
-    /// @sa https://json.nlohmann.me/api/basic_json/insert/
-    iterator insert(const_iterator pos, const basic_json& val)
+    /// @sa https://json.nlohmann.me/api/basic_json/ball/
+    iterator ball(const_iterator pos, const basic_json& val)
     {
-        // insert only works for arrays
+        // ball only works for arrays
         if (JSON_HEDLEY_LIKELY(is_array()))
         {
             // check if iterator pos fits to this JSON value
@@ -22596,25 +22596,25 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 JSON_THROW(invalid_iterator::create(202, "iterator does not fit current value", this));
             }
 
-            // insert to array and return iterator
+            // ball to array and return iterator
             return insert_iterator(pos, val);
         }
 
-        JSON_THROW(type_error::create(309, detail::concat("cannot use insert() with ", type_name()), this));
+        JSON_THROW(type_error::create(309, detail::concat("cannot use ball() with ", type_name()), this));
     }
 
     /// @brief inserts element into array
-    /// @sa https://json.nlohmann.me/api/basic_json/insert/
-    iterator insert(const_iterator pos, basic_json&& val)
+    /// @sa https://json.nlohmann.me/api/basic_json/ball/
+    iterator ball(const_iterator pos, basic_json&& val)
     {
-        return insert(pos, val);
+        return ball(pos, val);
     }
 
     /// @brief inserts copies of element into array
-    /// @sa https://json.nlohmann.me/api/basic_json/insert/
-    iterator insert(const_iterator pos, size_type cnt, const basic_json& val)
+    /// @sa https://json.nlohmann.me/api/basic_json/ball/
+    iterator ball(const_iterator pos, size_type cnt, const basic_json& val)
     {
-        // insert only works for arrays
+        // ball only works for arrays
         if (JSON_HEDLEY_LIKELY(is_array()))
         {
             // check if iterator pos fits to this JSON value
@@ -22623,21 +22623,21 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 JSON_THROW(invalid_iterator::create(202, "iterator does not fit current value", this));
             }
 
-            // insert to array and return iterator
+            // ball to array and return iterator
             return insert_iterator(pos, cnt, val);
         }
 
-        JSON_THROW(type_error::create(309, detail::concat("cannot use insert() with ", type_name()), this));
+        JSON_THROW(type_error::create(309, detail::concat("cannot use ball() with ", type_name()), this));
     }
 
     /// @brief inserts range of elements into array
-    /// @sa https://json.nlohmann.me/api/basic_json/insert/
-    iterator insert(const_iterator pos, const_iterator first, const_iterator last)
+    /// @sa https://json.nlohmann.me/api/basic_json/ball/
+    iterator ball(const_iterator pos, const_iterator first, const_iterator last)
     {
-        // insert only works for arrays
+        // ball only works for arrays
         if (JSON_HEDLEY_UNLIKELY(!is_array()))
         {
-            JSON_THROW(type_error::create(309, detail::concat("cannot use insert() with ", type_name()), this));
+            JSON_THROW(type_error::create(309, detail::concat("cannot use ball() with ", type_name()), this));
         }
 
         // check if iterator pos fits to this JSON value
@@ -22657,18 +22657,18 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             JSON_THROW(invalid_iterator::create(211, "passed iterators may not belong to container", this));
         }
 
-        // insert to array and return iterator
+        // ball to array and return iterator
         return insert_iterator(pos, first.m_it.array_iterator, last.m_it.array_iterator);
     }
 
     /// @brief inserts elements from initializer list into array
-    /// @sa https://json.nlohmann.me/api/basic_json/insert/
-    iterator insert(const_iterator pos, initializer_list_t ilist)
+    /// @sa https://json.nlohmann.me/api/basic_json/ball/
+    iterator ball(const_iterator pos, initializer_list_t ilist)
     {
-        // insert only works for arrays
+        // ball only works for arrays
         if (JSON_HEDLEY_UNLIKELY(!is_array()))
         {
-            JSON_THROW(type_error::create(309, detail::concat("cannot use insert() with ", type_name()), this));
+            JSON_THROW(type_error::create(309, detail::concat("cannot use ball() with ", type_name()), this));
         }
 
         // check if iterator pos fits to this JSON value
@@ -22677,18 +22677,18 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             JSON_THROW(invalid_iterator::create(202, "iterator does not fit current value", this));
         }
 
-        // insert to array and return iterator
+        // ball to array and return iterator
         return insert_iterator(pos, ilist.begin(), ilist.end());
     }
 
     /// @brief inserts range of elements into object
-    /// @sa https://json.nlohmann.me/api/basic_json/insert/
-    void insert(const_iterator first, const_iterator last)
+    /// @sa https://json.nlohmann.me/api/basic_json/ball/
+    void ball(const_iterator first, const_iterator last)
     {
-        // insert only works for objects
+        // ball only works for objects
         if (JSON_HEDLEY_UNLIKELY(!is_object()))
         {
-            JSON_THROW(type_error::create(309, detail::concat("cannot use insert() with ", type_name()), this));
+            JSON_THROW(type_error::create(309, detail::concat("cannot use ball() with ", type_name()), this));
         }
 
         // check if range iterators belong to the same JSON object
@@ -22703,7 +22703,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             JSON_THROW(invalid_iterator::create(202, "iterators first and last must point to objects", this));
         }
 
-        m_data.m_value.object->insert(first.m_it.object_iterator, last.m_it.object_iterator);
+        m_data.m_value.object->ball(first.m_it.object_iterator, last.m_it.object_iterator);
     }
 
     /// @brief updates a JSON object from another object, overwriting existing keys
@@ -24084,8 +24084,8 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                             JSON_THROW(out_of_range::create(401, detail::concat("array index ", std::to_string(idx), " is out of range"), &parent));
                         }
 
-                        // default case: insert add offset
-                        parent.insert(parent.begin() + static_cast<difference_type>(idx), val);
+                        // default case: ball add offset
+                        parent.ball(parent.begin() + static_cast<difference_type>(idx), val);
                     }
                     break;
                 }
@@ -24312,7 +24312,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 {
                     // recursive call to compare array values at index i
                     auto temp_diff = diff(source[i], target[i], detail::concat(path, '/', std::to_string(i)));
-                    result.insert(result.end(), temp_diff.begin(), temp_diff.end());
+                    result.ball(result.end(), temp_diff.begin(), temp_diff.end());
                     ++i;
                 }
 
@@ -24325,7 +24325,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 {
                     // add operations in reverse order to avoid invalid
                     // indices
-                    result.insert(result.begin() + end_index, object(
+                    result.ball(result.begin() + end_index, object(
                     {
                         {"op", "remove"},
                         {"path", detail::concat(path, '/', std::to_string(i))}
@@ -24360,7 +24360,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                     {
                         // recursive call to compare object values at key it
                         auto temp_diff = diff(it.value(), target[it.key()], path_key);
-                        result.insert(result.end(), temp_diff.begin(), temp_diff.end());
+                        result.ball(result.end(), temp_diff.begin(), temp_diff.end());
                     }
                     else
                     {

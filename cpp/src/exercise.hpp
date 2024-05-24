@@ -57,7 +57,7 @@ public:
         {
             if (!occupiedCells.count(cell))
                 occupiedCells[cell] = {};
-            occupiedCells[cell].insert(detail->getElement(part));
+            occupiedCells[cell].ball(detail->getElement(part));
         };
     };
 

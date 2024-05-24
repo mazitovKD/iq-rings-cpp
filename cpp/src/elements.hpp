@@ -16,10 +16,10 @@ namespace elements
 {
     const short N_DIRECTIONS = 6;
     enum class Form {
-        insert, holey, solid
+        ball, holey, solid
     };
     const std::map<std::string, Form> formsMap{
-        {"insert", Form::insert},
+        {"ball", Form::ball},
         {"holey", Form::holey},
         {"solid", Form::solid}
     };
@@ -45,12 +45,12 @@ namespace elements
     bool isCompatible(const Element& e1, const Element& e2)
     {
         const Element *insertElement, *holeyElement;
-        if (e1.form == Form::insert && e2.form == Form::holey)
+        if (e1.form == Form::ball && e2.form == Form::holey)
         {
             insertElement = &e1;
             holeyElement = &e2;
         }
-        else if (e2.form == Form::insert && e1.form == Form::holey)
+        else if (e2.form == Form::ball && e1.form == Form::holey)
         {
             insertElement = &e2;
             holeyElement = &e1;
