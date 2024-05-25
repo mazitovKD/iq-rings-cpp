@@ -47,6 +47,10 @@ public:
         disabledCells = config["disabled"];
         occupiedCells = {};
     };
+
+    short sise() const {
+        return rowsNumber * rowLenght - disabledCells.size();
+    };
     
     void insertValidDetail(details::Detail* detail, details::State state)
     {
@@ -116,17 +120,15 @@ private:
     std::vector<details::State> solution;
 
 public:
-    Exercise(json config): mainField(config["field"]), startDetails(config["initial"])
+    Exercise(const std::string& configStr)
+        : mainField(json::parse(configStr)["field"]), details(),
+        startDetails(json::parse(configStr)["initial"]), solution()
     {
-        json detailsConfigs = config["details"];
-        std::vector<details::Detail> details1{};
-        std::vector<details::State> solution1{};
+        json detailsConfigs = json::parse(configStr)["details"];
         for (int i = 0; i < detailsConfigs.size(); ++i) {
-            details1.emplace_back(details::Detail(detailsConfigs[i]["form"]));
-            solution1.emplace_back(details::State(detailsConfigs[i]["state"]));
+            details.emplace_back(details::Detail(detailsConfigs[i]["form"]));
+            solution.emplace_back(details::State(detailsConfigs[i]["state"]));
         }
-        details = std::move(details1);
-        solution = std::move(solution1);
         for (short i: startDetails)
             mainField.insertValidDetail(&details[i], solution[i]);
     };
@@ -139,16 +141,40 @@ public:
     void insertDetail(short detailNumber, short row, short column, short rotation, bool side) {
         details::State state({row, column}, rotation, side);
         mainField.insertValidDetail(&details[detailNumber], state);
-    }
+    };
 
     void removeDetail(short detailNumber) {
         mainField.removeDetail(details[detailNumber]);
-    }
+    };
 
-    bool isComplited() const {
+    bool allActive() const {
         for (const auto& d: details)
             if (!d.isActive())
                 return false;
+        return true;
+    };
+
+    // bool isConnected() const {
+    //     if (!allActive())
+    //         return false;
+    //     short fieldSise = mainField.sise();
+    //     std::map<short, std::set<Cell>> components{};
+    //     for (short i = 0; i < details.size(); ++i) {
+    //         components[i] = {};
+    //         for (const auto& [part, cell] : details.at(i).getCells())
+    //             components[i].insert(cell);
+    //     };
+
+    //     std::vector<std::set<short>> connections{};
+    //     for (short i = 0; i < details.size(); ++i)
+    //         connections.push_back({i});
+        
+    //     for 
+    // }
+
+    bool isComplited() const {
+        if (!allActive())
+            return false;
         for (int i = 0; i < details.size(); ++i)
             if (!details[i].isIn(solution[i]))
                 return false;
@@ -157,8 +183,8 @@ public:
 };
 
 
-Exercise makeExercise(const std::string& configPath) {
-    return Exercise(json::parse(configPath));
-}
+// Exercise makeExercise(const std::string& config) {
+//     return Exercise(json::parse(configStr));
+// }
 
 #endif // EXERCISE_H

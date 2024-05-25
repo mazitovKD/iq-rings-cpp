@@ -13,8 +13,7 @@ class Exercise(configPath: String) {
     protected fun finalize() {
         destroyExercise(nativePtr)
     }
-
-    private external fun createExercise(configPath: String): Long
+    private external fun createExercise(configStr: String): Long
     private external fun destroyExercise(ptr: Long)
     private external fun isDetailFits(ptr: Long, detailNumber: Short, row: Short, column: Short, rotation: Short, side: Boolean): Boolean
     private external fun insertDetail(ptr: Long, detailNumber: Short, row: Short, column: Short, rotation: Short, side: Boolean)
