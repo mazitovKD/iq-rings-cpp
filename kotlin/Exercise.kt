@@ -1,19 +1,19 @@
-package com.example
+package com.katysh.cppengineonkotlintest
 
-class Exercise(configPath: String) {
+class Exercise(configStr: String) {
 
     private var nativePtr: Long = 0
 
     init {
         System.loadLibrary("iq_rings")
-        nativePtr = createExercise(configPath)
+        nativePtr = createExercise(configStr)
     }
 
     @Throws(Throwable::class)
     protected fun finalize() {
         destroyExercise(nativePtr)
     }
-    private external fun createExercise(configStr: String): Long
+    private external fun createExercise(configStr: String):Long
     private external fun destroyExercise(ptr: Long)
     private external fun isDetailFits(ptr: Long, detailNumber: Short, row: Short, column: Short, rotation: Short, side: Boolean): Boolean
     private external fun insertDetail(ptr: Long, detailNumber: Short, row: Short, column: Short, rotation: Short, side: Boolean)

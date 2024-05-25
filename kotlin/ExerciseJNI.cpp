@@ -1,41 +1,45 @@
 #include <jni.h>
-#include "details.hpp"
-#include "elements.hpp"
+#include <string>
 #include "exercise.hpp"
-#include "json.hpp"
-#include "utils.hpp"
+
+// Helper function to convert jstring to std::string
+std::string jstringToString(JNIEnv* env, jstring jStr) {
+    const char* chars = env->GetStringUTFChars(jStr, nullptr);
+    std::string str(chars);
+    env->ReleaseStringUTFChars(jStr, chars);
+    return str;
+}
 
 extern "C" {
 
-JNIEXPORT jlong JNICALL Java_com_example_Exercise_createExercise(JNIEnv* env, jobject obj, jstring configPath) {
-    const char* nativeString = env->GetStringUTFChars(configPath, 0);
-    Exercise* exercise = new Exercise(nativeString);
-    env->ReleaseStringUTFChars(configPath, nativeString);
+JNIEXPORT jlong JNICALL Java_com_katysh_cppengineonkotlintest_Exercise_createExercise(JNIEnv* env, jobject obj, jstring configStr) {
+    std::string config = jstringToString(env, configStr);
+    Exercise* exercise = new Exercise(config);
     return reinterpret_cast<jlong>(exercise);
 }
 
-JNIEXPORT void JNICALL Java_com_example_Exercise_destroyExercise(JNIEnv* env, jobject obj, jlong exercisePtr) {
-    Exercise* exercise = reinterpret_cast<Exercise*>(exercisePtr);
+JNIEXPORT void JNICALL Java_com_katysh_cppengineonkotlintest_Exercise_destroyExercise(JNIEnv* env, jobject obj, jlong ptr) {
+    Exercise* exercise = reinterpret_cast<Exercise*>(ptr);
     delete exercise;
 }
 
-JNIEXPORT jboolean JNICALL Java_com_example_Exercise_isDetailFits(JNIEnv* env, jobject obj, jlong exercisePtr, jshort detailNumber, jshort row, jshort column, jshort rotation, jboolean side) {
-    Exercise* exercise = reinterpret_cast<Exercise*>(exercisePtr);
+JNIEXPORT jboolean JNICALL Java_com_katysh_cppengineonkotlintest_Exercise_isDetailFits(JNIEnv* env, jobject obj, jlong ptr, jshort detailNumber, jshort row, jshort column, jshort rotation, jboolean side) {
+    Exercise* exercise = reinterpret_cast<Exercise*>(ptr);
     return exercise->isDetailFits(detailNumber, row, column, rotation, side);
 }
 
-JNIEXPORT void JNICALL Java_com_example_Exercise_insertDetail(JNIEnv* env, jobject obj, jlong exercisePtr, jshort detailNumber, jshort row, jshort column, jshort rotation, jboolean side) {
-    Exercise* exercise = reinterpret_cast<Exercise*>(exercisePtr);
+JNIEXPORT void JNICALL Java_com_katysh_cppengineonkotlintest_Exercise_insertDetail(JNIEnv* env, jobject obj, jlong ptr, jshort detailNumber, jshort row, jshort column, jshort rotation, jboolean side) {
+    Exercise* exercise = reinterpret_cast<Exercise*>(ptr);
     exercise->insertDetail(detailNumber, row, column, rotation, side);
 }
 
-JNIEXPORT void JNICALL Java_com_example_Exercise_removeDetail(JNIEnv* env, jobject obj, jlong exercisePtr, jshort detailNumber) {
-    Exercise* exercise = reinterpret_cast<Exercise*>(exercisePtr);
+JNIEXPORT void JNICALL Java_com_katysh_cppengineonkotlintest_Exercise_removeDetail(JNIEnv* env, jobject obj, jlong ptr, jshort detailNumber) {
+    Exercise* exercise = reinterpret_cast<Exercise*>(ptr);
     exercise->removeDetail(detailNumber);
 }
 
-JNIEXPORT jboolean JNICALL Java_com_example_Exercise_isCompleted(JNIEnv* env, jobject obj, jlong exercisePtr) {
-    Exercise* exercise = reinterpret_cast<Exercise*>(exercisePtr);
+JNIEXPORT jboolean JNICALL Java_com_katysh_cppengineonkotlintest_Exercise_isCompleted(JNIEnv* env, jobject obj, jlong ptr) {
+    Exercise* exercise = reinterpret_cast<Exercise*>(ptr);
     return exercise->isComplited();
 }
 
