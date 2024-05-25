@@ -1,0 +1,362 @@
+{
+    "field": {
+        "rows": 4,
+        "columns": 6,
+        "disabled": []
+    },
+    "initial": [
+        0,
+        2,
+        4,
+        5,
+        7,
+        9,
+        10,
+        11
+    ],
+    "details": [
+        {
+            "name": "00",
+            "state": {
+                "position": [
+                    1,
+                    5
+                ],
+                "rotation": 4,
+                "isFrontSide": false
+            },
+            "form": {
+                "angle": "acute",
+                "elements": {
+                    "left": {
+                        "type": "ball"
+                    },
+                    "center": {
+                        "type": "holey",
+                        "holes": [
+                            4
+                        ]
+                    },
+                    "right": {
+                        "type": "holey",
+                        "holes": [
+                            3
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "01",
+            "state": {
+                "position": [
+                    0,
+                    4
+                ],
+                "rotation": 3,
+                "isFrontSide": false
+            },
+            "form": {
+                "angle": "straight",
+                "elements": {
+                    "left": {
+                        "type": "ball"
+                    },
+                    "center": {
+                        "type": "solid"
+                    },
+                    "right": {
+                        "type": "holey",
+                        "holes": [
+                            2
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "02",
+            "state": {
+                "position": [
+                    2,
+                    1
+                ],
+                "rotation": 5,
+                "isFrontSide": false
+            },
+            "form": {
+                "angle": "obtuse",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            1
+                        ]
+                    },
+                    "center": {
+                        "type": "solid"
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "03",
+            "state": {
+                "position": [
+                    2,
+                    5
+                ],
+                "rotation": 3,
+                "isFrontSide": false
+            },
+            "form": {
+                "angle": "acute",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            1
+                        ]
+                    },
+                    "center": {
+                        "type": "ball"
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "04",
+            "state": {
+                "position": [
+                    2,
+                    5
+                ],
+                "rotation": 1,
+                "isFrontSide": true
+            },
+            "form": {
+                "angle": "straight",
+                "elements": {
+                    "left": {
+                        "type": "ball"
+                    },
+                    "center": {
+                        "type": "holey",
+                        "holes": [
+                            1,
+                            2
+                        ]
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "05",
+            "state": {
+                "position": [
+                    3,
+                    1
+                ],
+                "rotation": 5,
+                "isFrontSide": false
+            },
+            "form": {
+                "angle": "obtuse",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            0
+                        ]
+                    },
+                    "center": {
+                        "type": "solid"
+                    },
+                    "right": {
+                        "type": "holey",
+                        "holes": [
+                            1
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "06",
+            "state": {
+                "position": [
+                    1,
+                    2
+                ],
+                "rotation": 0,
+                "isFrontSide": true
+            },
+            "form": {
+                "angle": "obtuse",
+                "elements": {
+                    "left": {
+                        "type": "ball"
+                    },
+                    "center": {
+                        "type": "holey",
+                        "holes": [
+                            5
+                        ]
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "07",
+            "state": {
+                "position": [
+                    1,
+                    0
+                ],
+                "rotation": 2,
+                "isFrontSide": true
+            },
+            "form": {
+                "angle": "obtuse",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            4
+                        ]
+                    },
+                    "center": {
+                        "type": "solid"
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "08",
+            "state": {
+                "position": [
+                    0,
+                    1
+                ],
+                "rotation": 0,
+                "isFrontSide": true
+            },
+            "form": {
+                "angle": "acute",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            0
+                        ]
+                    },
+                    "center": {
+                        "type": "ball"
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "09",
+            "state": {
+                "position": [
+                    3,
+                    3
+                ],
+                "rotation": 3,
+                "isFrontSide": true
+            },
+            "form": {
+                "angle": "obtuse",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            2
+                        ]
+                    },
+                    "center": {
+                        "type": "solid"
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "10",
+            "state": {
+                "position": [
+                    0,
+                    3
+                ],
+                "rotation": 3,
+                "isFrontSide": false
+            },
+            "form": {
+                "angle": "acute",
+                "elements": {
+                    "left": {
+                        "type": "ball"
+                    },
+                    "center": {
+                        "type": "holey",
+                        "holes": [
+                            3
+                        ]
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        },
+        {
+            "name": "11",
+            "state": {
+                "position": [
+                    2,
+                    3
+                ],
+                "rotation": 5,
+                "isFrontSide": true
+            },
+            "form": {
+                "angle": "straight",
+                "elements": {
+                    "left": {
+                        "type": "holey",
+                        "holes": [
+                            4
+                        ]
+                    },
+                    "center": {
+                        "type": "solid"
+                    },
+                    "right": {
+                        "type": "ball"
+                    }
+                }
+            }
+        }
+    ]
+}

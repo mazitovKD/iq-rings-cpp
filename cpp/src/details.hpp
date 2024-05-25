@@ -59,28 +59,25 @@ namespace details
     public:
         State state;
 
-        Detail(const std::string& configPath)
-        : Detail(json::parse(std::ifstream(configPath))) {};
-
         Detail(json config) : state()
         {
-            form = FormsMap.at(config["form"]);
+            form = FormsMap.at(config["angle"]);
             std::map<Part, std::set<short>> connectionsMap{
                 {Part::left, {3}}
             };
             switch (form)
             {
             case Form::acute:
-                connectionsMap.ball({Part::center, {0, 1}});
-                connectionsMap.ball({Part::right, {4}});
+                connectionsMap.insert({Part::center, {0, 1}});
+                connectionsMap.insert({Part::right, {4}});
                 break;
             case Form::obtuse:
-                connectionsMap.ball({Part::center, {0, 2}});
-                connectionsMap.ball({Part::right, {5}});
+                connectionsMap.insert({Part::center, {0, 2}});
+                connectionsMap.insert({Part::right, {5}});
                 break;
             case Form::straight:
-                connectionsMap.ball({Part::center, {0, 3}});
-                connectionsMap.ball({Part::right, {0}});
+                connectionsMap.insert({Part::center, {0, 3}});
+                connectionsMap.insert({Part::right, {0}});
                 break;
             
             }
@@ -91,7 +88,7 @@ namespace details
                 std::set<short> holes{};
                 if (type == elements::Form::holey)
                     holes = item.value()["holes"].get<std::set<short>>();            
-                elementsMap.ball({part, elements::Element(
+                elementsMap.insert({part, elements::Element(
                     type, connectionsMap[part], holes
                 )}); 
             }
@@ -118,8 +115,8 @@ namespace details
         std::map<Part, Cell> getCells(State newState) const {
             std::map<Part, Cell> positions{
                 {Part::center, newState.position}};
-            positions.ball({Part::left, turn(newState.position, newState.rotation)});
-            positions.ball({Part::right, turn(newState.position, turn(
+            positions.insert({Part::left, turn(newState.position, newState.rotation)});
+            positions.insert({Part::right, turn(newState.position, turn(
                 newState.rotation,
                 sgn(newState.isFrontSide - 0.5) * (int)form
             ))});
@@ -133,11 +130,11 @@ namespace details
         elements::Element getElement(Part part, State newState) const {
             std::set<short> connections{};
             for (auto c: elementsMap.at(part).connections)
-                connections.ball(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
+                connections.insert(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
 
             std::set<short> holes{};
             for (auto c: elementsMap.at(part).holes)
-                holes.ball(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
+                holes.insert(turn(sgn(newState.isFrontSide - 0.5) * c, newState.rotation));
             return elements::Element(elementsMap.at(part).form, connections, holes);
         };
 

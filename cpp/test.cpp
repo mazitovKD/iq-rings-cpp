@@ -26,8 +26,9 @@ void remove(Exercise &e, short n) {
 
 
 int main() {
-    std::string cfgPath = "../configs/exercise_junior25.json";
-    Exercise exercise(cfgPath);
+    std::string cfgPath = "/home/kama/Projects/iq_rings/configs/complited_exercises/junior25.json";
+
+    Exercise exercise = makeExercise(cfgPath);
 
     std::cout << "--------------------------------------\n";
 

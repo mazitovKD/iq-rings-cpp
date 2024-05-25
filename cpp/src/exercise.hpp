@@ -57,7 +57,7 @@ public:
         {
             if (!occupiedCells.count(cell))
                 occupiedCells[cell] = {};
-            occupiedCells[cell].ball(detail->getElement(part));
+            occupiedCells[cell].insert(detail->getElement(part));
         };
     };
 
@@ -118,24 +118,18 @@ private:
 public:
     Exercise(json config): mainField(config["field"]), startDetails(config["initial"])
     {
-        std::string detailsDir = config["detailsDir"];
         json detailsConfigs = config["details"];
         std::vector<details::Detail> details1{};
         std::vector<details::State> solution1{};
         for (int i = 0; i < detailsConfigs.size(); ++i) {
-            details1.emplace_back(details::Detail(
-                detailsDir + detailsConfigs[i]["name"].get<std::string>() + ".json"
-            ));
-            solution1.emplace_back(details::State(detailsConfigs[i]));
+            details1.emplace_back(details::Detail(detailsConfigs[i]["form"]));
+            solution1.emplace_back(details::State(detailsConfigs[i]["state"]));
         }
         details = std::move(details1);
         solution = std::move(solution1);
         for (short i: startDetails)
             mainField.insertValidDetail(&details[i], solution[i]);
     };
-
-    Exercise(const std::string& configPath)
-        : Exercise(json::parse(std::ifstream(configPath))) {};
 
     bool isDetailFits(short detailNumber, short row, short column, short rotation, bool side) {
         details::State state({row, column}, rotation, side);
@@ -161,5 +155,10 @@ public:
         return true;
     };
 };
+
+
+Exercise makeExercise(const std::string& configPath) {
+    return Exercise(json::parse(configPath));
+}
 
 #endif // EXERCISE_H

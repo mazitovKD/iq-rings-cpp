@@ -1,9 +1,9 @@
 {
-    "form": "acute",
+    "angle": "acute",
     "elements":
     {
         "left": {
-            "type": "insert"
+            "type": "ball"
         },
         "center": {
             "type": "holey",

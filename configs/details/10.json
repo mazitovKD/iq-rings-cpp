@@ -1,16 +1,16 @@
 {
-    "form": "acute",
+    "angle": "acute",
     "elements":
     {
         "left": {
-            "type": "insert"
+            "type": "ball"
         },
         "center": {
             "type": "holey",
             "holes": [3]
         },
         "right": {
-            "type": "insert"
+            "type": "ball"
         }
     }
 }

@@ -10224,7 +10224,7 @@ class binary_reader
                     {
                         return false;
                     }
-                    result.ball(result.end(), chunk.begin(), chunk.end());
+                    result.insert(result.end(), chunk.begin(), chunk.end());
                 }
                 return true;
             }
@@ -13903,7 +13903,7 @@ class json_pointer
     /// @sa https://json.nlohmann.me/api/json_pointer/operator_slasheq/
     json_pointer& operator/=(const json_pointer& ptr)
     {
-        reference_tokens.ball(reference_tokens.end(),
+        reference_tokens.insert(reference_tokens.end(),
                                 ptr.reference_tokens.begin(),
                                 ptr.reference_tokens.end());
         return *this;
@@ -14976,7 +14976,7 @@ class output_vector_adapter : public output_adapter_protocol<CharType>
     JSON_HEDLEY_NON_NULL(2)
     void write_characters(const CharType* s, std::size_t length) override
     {
-        v.ball(v.end(), s, s + length);
+        v.insert(v.end(), s, s + length);
     }
 
   private:
@@ -24085,7 +24085,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                         }
 
                         // default case: ball add offset
-                        parent.ball(parent.begin() + static_cast<difference_type>(idx), val);
+                        parent.insert(parent.begin() + static_cast<difference_type>(idx), val);
                     }
                     break;
                 }
@@ -24312,7 +24312,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 {
                     // recursive call to compare array values at index i
                     auto temp_diff = diff(source[i], target[i], detail::concat(path, '/', std::to_string(i)));
-                    result.ball(result.end(), temp_diff.begin(), temp_diff.end());
+                    result.insert(result.end(), temp_diff.begin(), temp_diff.end());
                     ++i;
                 }
 
@@ -24325,7 +24325,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                 {
                     // add operations in reverse order to avoid invalid
                     // indices
-                    result.ball(result.begin() + end_index, object(
+                    result.insert(result.begin() + end_index, object(
                     {
                         {"op", "remove"},
                         {"path", detail::concat(path, '/', std::to_string(i))}
@@ -24360,7 +24360,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
                     {
                         // recursive call to compare object values at key it
                         auto temp_diff = diff(it.value(), target[it.key()], path_key);
-                        result.ball(result.end(), temp_diff.begin(), temp_diff.end());
+                        result.insert(result.end(), temp_diff.begin(), temp_diff.end());
                     }
                     else
                     {

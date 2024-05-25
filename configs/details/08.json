@@ -1,5 +1,5 @@
 {
-    "form": "acute",
+    "angle": "acute",
     "elements":
     {
         "left": {
@@ -7,11 +7,11 @@
             "holes": [0]
         },
         "center": {
-            "type": "insert"
+            "type": "ball"
         },
         "right": {
 
-            "type": "insert"
+            "type": "ball"
         }
     }
 }

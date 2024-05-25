@@ -1,9 +1,9 @@
 {
-    "form": "straight",
+    "angle": "straight",
     "elements":
     {
         "left": {
-            "type": "insert"
+            "type": "ball"
         },
         "center": {
             "type": "solid"
