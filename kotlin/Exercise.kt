@@ -5,7 +5,7 @@ class Exercise(configStr: String) {
     private var nativePtr: Long = 0
 
     init {
-        System.loadLibrary("iq_rings")
+        System.loadLibrary("NativeRingsEngine")
         nativePtr = createExercise(configStr)
     }
 
