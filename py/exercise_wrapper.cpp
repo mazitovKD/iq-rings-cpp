@@ -12,10 +12,11 @@ namespace py = pybind11;
 PYBIND11_MODULE(iq_rings, m) {
     py::class_<Exercise>(m, "Exercise")
         .def(py::init<const std::string&>())
-        .def("isDetailFits", &Exercise::isDetailFits)
-        .def("insertDetail", &Exercise::insertDetail)
+        .def("allActive", &Exercise::allActive)
+        .def("tryInsert", &Exercise::tryInsert)
         .def("removeDetail", &Exercise::removeDetail)
-        .def("isComplited", &Exercise::isComplited);
+        .def("getOccupiedCells", &Exercise::getOccupiedCells)
+        .def("isConnected", &Exercise::isConnected);
     
-    m.def("makeExercise", &makeExercise, "Create an Exercise instance from a config file path");
+    // m.def("makeExercise", &makeExercise, "Create an Exercise instance from a config file path");
 }
