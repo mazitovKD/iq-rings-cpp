@@ -1,6 +1,6 @@
 ## Сборка Native модуля
 1. Добавьте файл [kotlin/CMakeLists.txt](CMakeLists.txt) в папку `app/` 
-2. Создайте папку `app/src/main/cpp` (рядом с папкой `java``) и перетащите туда 
+2. Создайте папку `app/src/main/cpp` (рядом с папкой `java`) и перетащите туда 
 содержимое папки [native_engine/src/](../native_engine/src/). 
 Если основной пакет отличен от `com.katysh.iqrings`, замените в файле [native_engine/src/ExerciseJNI.cpp](../native_engine/src/ExerciseJNI.cpp) 
 все вхождения `com_katysh_iqrings` на аналогичное (пакет в котором точки заменены на нижние подчеркивания и все буквы в нижнем регистре)  
