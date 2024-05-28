@@ -1,11 +1,11 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>
-#include "details.hpp"
-#include "elements.hpp"
+// #include "details.hpp"
+// #include "elements.hpp"
 #include "exercise.hpp"
-#include "json.hpp"
-#include "utils.hpp"
+// #include "json.hpp"
+// #include "utils.hpp"
 
 namespace py = pybind11;
 
@@ -17,6 +17,7 @@ PYBIND11_MODULE(iq_rings, m) {
         .def("removeDetail", &Exercise::removeDetail)
         .def("getOccupiedCells", &Exercise::getOccupiedCells)
         .def("isConnected", &Exercise::isConnected);
+        // .def("getConnectedDetails", &Exercise::getConnectedDetails);
     
     // m.def("makeExercise", &makeExercise, "Create an Exercise instance from a config file path");
 }

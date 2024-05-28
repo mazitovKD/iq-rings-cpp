@@ -1,4 +1,4 @@
-package com.katysh.cppengineonkotlintest
+package com.katysh.iqrings
 
 class Exercise(configStr: String) {
 
