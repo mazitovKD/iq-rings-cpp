@@ -8,7 +8,7 @@
 #include <tuple>
 #include <memory>
 #include <string>
-#include <fstream>
+#include <iostream>
 #include <algorithm>
 #include <set>
 
@@ -36,32 +36,42 @@ namespace elements
         bool operator<(Element const& rhs) const {
             return form < rhs.form;
         };
+
+        void print() const {
+            std::cout << int(form);
+            if (form == Form::holey) {
+                std::cout << " h: ";
+                for (auto h: holes)
+                    std::cout << h << ", ";
+            }
+            else {
+                std::cout << " c: ";
+                for (auto h: connections)
+                    std::cout << h << ", ";
+            }
+            std::cout << '\n';
+        };
     };
 
     short turn(short direction, short rotation) {
         return (6 + direction + rotation) % N_DIRECTIONS;
     }
 
+    bool isCompatibleHB(const Element& h, const Element& b)
+    {
+        return std::includes(
+            h.holes.begin(), h.holes.end(),
+            b.connections.begin(), b.connections.end()
+        );
+    }
+
     bool isCompatible(const Element& e1, const Element& e2)
     {
-        const Element *insertElement, *holeyElement;
         if (e1.form == Form::ball && e2.form == Form::holey)
-        {
-            insertElement = &e1;
-            holeyElement = &e2;
-        }
-        else if (e2.form == Form::ball && e1.form == Form::holey)
-        {
-            insertElement = &e2;
-            holeyElement = &e1;
-        }
-        else
-            return false;
-        bool inc = std::includes(
-            holeyElement->holes.begin(), holeyElement->holes.end(),
-            insertElement->connections.begin(), insertElement->connections.end()
-        );
-        return inc;
+            return isCompatibleHB(e2, e1);
+        if (e2.form == Form::ball && e1.form == Form::holey)
+            return isCompatibleHB(e1, e2);
+        return false;
     }
 }
 

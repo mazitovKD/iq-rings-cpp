@@ -10,12 +10,17 @@
 #include <fstream>
 #include <algorithm>
 #include <queue>
+#include <iostream>
+#include <fstream>
+
 
 #include <details.hpp>
 #include <elements.hpp>
 #include <utils.hpp>
 #include <json.hpp>
 using json = nlohmann::json;
+
+// #define GENERATION 1
 
 
 class MainField
@@ -56,17 +61,75 @@ public:
 #ifdef GENERATION
     std::set<Cell> getOccupiedCells() const {
         std::set<Cell> result{};
-        for (const auto& [cell, elems] : occupiedCells)
-            if (
-                (elems.size() == 2) ||
-                (elems.begin()->form == elements::Form::solid)
-            )
+        for (const auto& [cell, elems] : occupiedCells) {
+            if (elems.size() == 2)
+            {
                 result.insert(cell);
+                continue;
+            }
+            const auto& elem = elems.begin();
+            if (elem->form == elements::Form::solid)
+            {
+                result.insert(cell);
+                continue;
+            }
+            if ((elem->form == elements::Form::holey) && (elem->holes.size() == 1)) {
+                short h = *elem->holes.begin(), y = cell.first, x = cell.second;
+                if (
+                    ((y == 0) && (h > 3)) ||
+                    ((y == rowsNumber - 1) && (turn(h, -1) < 2))
+                )
+                {
+                    result.insert(cell);
+                    continue;
+                }
+                if (
+                    ((x == 0) && !(y % 2) && (turn(h, 1) > 2)) ||
+                    ((x == 0) &&  (y % 2) && (h == 3)) ||
+                    ((x == rowLenght - 1) &&  (y % 2) && (turn(h, 1) < 3)) ||
+                    ((x == rowLenght - 1) && !(y % 2) && (h == 0))
+                )
+                {
+                    result.insert(cell);
+                    continue;
+                }
+            }
+        }
         return result;
     };
 
-    std::set<Cell> tryInsert(details::Detail& detail, details::State state) {
+    std::set<Cell> getVacantCells() const {
+        std::set<Cell> result{};
+        for (const auto& [cell, elems] : occupiedCells) {
+            if (elems.size() == 2)
+                continue;
+            
+            const auto& elem = elems.begin();
+            if (elem->form == elements::Form::solid)
+                continue;
+            if ((elem->form == elements::Form::holey) && (elem->holes.size() == 1)) {
+                short h = *elem->holes.begin(), y = cell.first, x = cell.second;
+                if (
+                    ((y == 0) && (h > 3)) ||
+                    ((y == rowsNumber - 1) && (turn(h, -1) < 2))
+                )
+                    continue;
+                if (
+                    ((x == 0) && !(y % 2) && (turn(h, 1) > 2)) ||
+                    ((x == 0) &&  (y % 2) && (h == 3)) ||
+                    ((x == rowLenght - 1) &&  (y % 2) && (turn(h, 1) < 3)) ||
+                    ((x == rowLenght - 1) && !(y % 2) && (h == 0))
+                )
+                    continue;
+            }
+            result.insert(cell);
+        }
+        return result;
+    };
+
+    std::set<Cell> tryInsert(details::Detail &detail, details::State state) {
         auto positions = detail.getCells(state);
+        // check that is posible
         for (const auto& [part, cell]: positions)
             if (!cellExists(cell))
                 return {};
@@ -82,7 +145,11 @@ public:
             ))
                 return {};
         }
+
+        // update Field
         detail.setState(state);
+        for (const auto& [part, cell]: positions)
+            occupiedCells[cell].insert(detail.getElement(part));
         return {
             positions[details::Part::left],
             positions[details::Part::center],
@@ -98,17 +165,14 @@ public:
         auto positions = detail.getCells();
         for (const auto& [part, cell] : positions)
         {
-            assert (occupiedCells.count(cell) > 0);
             auto & cellElements = occupiedCells[cell];
-            if (cellElements.size() == 1) {
-                occupiedCells.erase(cell);
-                continue;
-            }
             for (auto & elem: cellElements)
                 if (elem.form == detail.getElementForm(part)) {
                     cellElements.erase(elem);
                     break;
                 }
+            if (cellElements.empty())
+                occupiedCells.erase(cell);
         }
         detail.setFree();
         return {
@@ -125,11 +189,7 @@ public:
         auto positions = detail->getCells();
 
         for (const auto& [part, cell]: positions)
-        {
-            if (!occupiedCells.count(cell))
-                occupiedCells[cell] = {};
             occupiedCells[cell].insert(detail->getElement(part));
-        };
     };
 
     bool isDetailFits(const details::Detail& detail, details::State state) const
@@ -161,17 +221,14 @@ public:
         auto positions = detail.getCells();
         for (const auto& [part, cell] : positions)
         {
-            assert (occupiedCells.count(cell) > 0);
             auto & cellElements = occupiedCells[cell];
-            if (cellElements.size() == 1) {
-                occupiedCells.erase(cell);
-                continue;
-            }
             for (auto & elem: cellElements)
                 if (elem.form == detail.getElementForm(part)) {
                     cellElements.erase(elem);
                     break;
                 }
+            if (cellElements.empty())
+                occupiedCells.erase(cell);
         }
         detail.setFree();
     };
@@ -192,6 +249,8 @@ private:
     std::map<Cell, std::set<short>> occupiedCells;
 
     std::set<short> getConnectedDetails(short detailNumber) const {
+        if (!details.at(detailNumber).isActive())
+            return {};
         std::map<details::Part, Cell> cells = details.at(detailNumber).getCells();
         std::set<short> connectedDetails{};
         for (const auto& [part, cell] : cells) 
@@ -228,6 +287,14 @@ private:
 #endif
 
 public:
+
+    short activeCount() const {
+        short result = 0; 
+        for (const auto& d: details)
+            result += d.isActive();
+        return result;
+    };
+
 #ifdef GENERATION
     Exercise(const std::string& configStr)
         : mainField(json::parse(configStr)["field"]), details()
@@ -243,10 +310,7 @@ public:
         if (!cells.size())
             return false;
         for (const auto& cell: cells)
-            if (occupiedCells.count(cell))
-                occupiedCells[cell].insert(detailNumber);
-            else
-                occupiedCells[cell] = {detailNumber};
+            occupiedCells[cell].insert(detailNumber);
         return true;
     };
 #else
@@ -256,6 +320,19 @@ public:
         startDetails(json::parse(configStr)["initial"]), solution()
     {
         json detailsConfigs = json::parse(configStr)["details"];
+        for (int i = 0; i < detailsConfigs.size(); ++i) {
+            details.emplace_back(details::Detail(detailsConfigs[i]["form"]));
+
+            solution.emplace_back(details::State(detailsConfigs[i]["state"]));
+        }
+        for (short i: startDetails)
+            mainField.insertValidDetail(&details[i], solution[i]);
+    };
+
+    Exercise(json cfg) : mainField(cfg["field"]), details(),
+        startDetails(cfg["initial"]), solution() 
+    {
+        json detailsConfigs = cfg["details"];
         for (int i = 0; i < detailsConfigs.size(); ++i) {
             details.emplace_back(details::Detail(detailsConfigs[i]["form"]));
 
@@ -283,7 +360,7 @@ public:
             return;
         for (const auto& cell: cells) {
             occupiedCells[cell].erase(detailNumber);
-            if (!occupiedCells[cell].size())
+            if (occupiedCells[cell].empty())
                 occupiedCells.erase(cell);
         }
 #else
@@ -292,13 +369,11 @@ public:
     };
 
     bool allActive() const {
-        for (const auto& d: details)
-            if (!d.isActive())
-                return false;
-        return true;
+        return activeCount() == details.size();
     };
 
 #ifdef GENERATION
+
     std::set<Cell> getOccupiedCells() const {
         return mainField.getOccupiedCells();
     };
@@ -306,8 +381,15 @@ public:
     bool isConnected() const {
         if (!allActive())
             return false;
-        std::set<short> firstComponent = getComponent(0);
-        return firstComponent.size() == details.size();
+        return isDetailConnected(0);
+    };
+
+    bool isDetailConnected(short detailNumber) const {
+        return getComponent(detailNumber).size() == activeCount();
+    };
+
+    std::set<Cell> getVacantCells() const {
+        return mainField.getVacantCells();
     };
 #else
 
@@ -321,10 +403,5 @@ public:
     };
 #endif
 };
-
-
-// Exercise makeExercise(const std::string& config) {
-//     return Exercise(json::parse(configStr));
-// }
 
 #endif // EXERCISE_H
