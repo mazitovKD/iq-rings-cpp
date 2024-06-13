@@ -1,3 +1,5 @@
+__pycache__
+gen/__pycache__
 build
 .vscode/
 .gradle/

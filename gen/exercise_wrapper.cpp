@@ -18,5 +18,6 @@ PYBIND11_MODULE(native_rings_engine, m) {
         .def("getOccupiedCells", &Exercise::getOccupiedCells)
         .def("getVacantCells", &Exercise::getVacantCells)
         .def("isDetailConnected", &Exercise::isDetailConnected)
+        .def("isDetailFits", &Exercise::isDetailFits)
         .def("isConnected", &Exercise::isConnected);
 }

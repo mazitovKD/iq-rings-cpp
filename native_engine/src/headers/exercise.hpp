@@ -58,6 +58,27 @@ public:
         return rowsNumber * rowLenght - disabledCells.size();
     };
 
+    bool isDetailFits(const details::Detail& detail, details::State state) const
+    {
+        auto positions = detail.getCells(state);
+        for (const auto& [part, cell]: positions)
+            if (!cellExists(cell))
+                return false;
+        for (const auto& [part, cell]: positions) {
+            if (!occupiedCells.count(cell))
+                continue;
+            const auto *cellElements = &occupiedCells.at(cell);
+            if (cellElements->size() > 1)
+                return false;
+            
+            if (!elements::isCompatible(
+                detail.getElement(part, state), *cellElements->begin()
+            ))
+                return false;
+        }
+        return true;
+    };
+
 #ifdef GENERATION
     std::set<Cell> getOccupiedCells() const {
         std::set<Cell> result{};
@@ -192,27 +213,6 @@ public:
             occupiedCells[cell].insert(detail->getElement(part));
     };
 
-    bool isDetailFits(const details::Detail& detail, details::State state) const
-    {
-        auto positions = detail.getCells(state);
-        for (const auto& [part, cell]: positions)
-            if (!cellExists(cell))
-                return false;
-        for (const auto& [part, cell]: positions) {
-            if (!occupiedCells.count(cell))
-                continue;
-            const auto *cellElements = &occupiedCells.at(cell);
-            if (cellElements->size() > 1)
-                return false;
-            
-            if (!elements::isCompatible(
-                detail.getElement(part, state), *cellElements->begin()
-            ))
-                return false;
-        }
-        return true;
-    };
-
     void removeDetail(details::Detail& detail)
     {
         if (!detail.isActive()) {
@@ -342,16 +342,16 @@ public:
             mainField.insertValidDetail(&details[i], solution[i]);
     };
 
-    bool isDetailFits(short detailNumber, short row, short column, short rotation, bool side) {
-        details::State state({row, column}, rotation, side);
-        return mainField.isDetailFits(details[detailNumber], state);
-    };
-
     void insertDetail(short detailNumber, short row, short column, short rotation, bool side) {
         details::State state({row, column}, rotation, side);
         mainField.insertValidDetail(&details[detailNumber], state);
     };
 #endif
+
+    bool isDetailFits(short detailNumber, short row, short column, short rotation, bool side) const {
+        details::State state({row, column}, rotation, side);
+        return mainField.isDetailFits(details[detailNumber], state);
+    };
 
     void removeDetail(short detailNumber) {
 #ifdef GENERATION

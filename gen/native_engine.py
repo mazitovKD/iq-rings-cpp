@@ -30,7 +30,27 @@ class DetailState:
         return hash(str(self))
 
     def __str__(self) -> str:
-        return f"{self.row}_{self.column}_{self.rotation}_{self.side}"
+        return f"{self.row}_{self.column}_{self.rotation}_{int(self.side)}"
+    
+
+@define
+class FieldState:
+    states: dict[int, DetailState]
+    size: int = 12
+
+    def __hash__(self) -> int:
+        pass
+
+    def __str__(self) -> str:
+        ';'.join((str(self.states.get(d, '*')) for d in range(self.size)))
+
+    def __setitem__(self, key, value):
+        if not isinstance(key, int) or (self.size <= key) or (key < 0):
+            raise KeyError(f"only `int` in [0, {self.size})")
+        if not isinstance(value, DetailState):
+            raise ValueError("only `DetailState`")
+        self.states[key] = value
+
 
 
 class Exercise:
@@ -46,7 +66,7 @@ class Exercise:
         self.cells: set[tuple[int, int]] = {
             (y, x) for y in range(self.rows) for x in range(self.columns)
         }
-        self.pb: tqdm = pb
+        # self.pb: tqdm = pb
 
 
     def insert(self, detail: int, state: DetailState) -> bool:
@@ -55,8 +75,14 @@ class Exercise:
         )
         if fits:
             self.free_details.remove(detail)
-        self.pb.update(1)
+        # if self.pb is not None:
+        #     self.pb.update(1)
         return fits
+    
+    def is_fits(self, detail: int, state: DetailState) -> bool:
+        return self._native_exercise.isDetailFits(
+            detail, state.row, state.column, state.rotation, state.side
+        )
     
     def remove(self, detail: int) -> None:
         if detail in self.free_details:
